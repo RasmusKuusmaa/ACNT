@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import CompanyForm from './components/CompanyForm.vue';
+import MilageFrom from './components/MilageFrom.vue';
 
 </script>
 
 <template>
   <div class="container">
     <h1>Soidupaeviku rakendus</h1>
-    <CompanyForm/>
+    <CompanyForm />
+    <MilageFrom />
   </div>
 </template>
 
 <style scoped>
 .container {
-  max-width: 100vw;
   margin: auto;
   padding: 1.5rem;
 }
