@@ -4,7 +4,6 @@
 
     <div class="table">
       <div class="row header">
-        <div>Rida</div>
         <div>Sõidu kuupäev</div>
         <div>Auto number</div>
         <div>Läbisõidumõõdiku algnäit</div>
@@ -14,8 +13,8 @@
         <div>Summa</div>
       </div>
 
+      
       <div class="row">
-        <div>1</div>
         <input type="date" />
         <input type="text" placeholder="ABC123" />
         <input type="number" placeholder="0" />
@@ -25,6 +24,7 @@
         <div>100</div>
       </div>
     </div>
+    <button>Lisa Sõit</button>
   </div>
 </template>
 
@@ -45,7 +45,7 @@
 
 .row {
   display: grid;
-  grid-template-columns: 60px 140px 120px 180px 180px 120px 200px 100px;
+  grid-template-columns: 140px 120px 180px 180px 120px 200px 100px 50px;
   gap: 0.5rem;
   align-items: center;
   padding: 0.3rem 0;
