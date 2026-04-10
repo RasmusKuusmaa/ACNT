@@ -22,7 +22,7 @@ const selectedMonth = ref(new Date().getMonth())
 const selectedYear = ref(new Date().getFullYear())
 const kmPrice = ref(0)
 
-const { stats } = useStats(rides, selectedMonth, selectedYear, kmPrice)
+const { stats, monthlyBreakdown } = useStats(rides, selectedMonth, selectedYear, kmPrice)
 
 function addRide(ride: Ride) {
   rides.value.push({
@@ -53,16 +53,16 @@ function generateTestData() {
 
     <MilageFrom @add-ride="addRide" />
 
-    <MonthSelector :rides="rides" v-model:selectedMonth="selectedMonth" v-model:selectedYear="selectedYear" />
-
+    <MonthSelector v-model:selectedMonth="selectedMonth" v-model:selectedYear="selectedYear" :rides="rides"
+      :monthly-breakdown="monthlyBreakdown" />
     <DataOverViewtable :stats="stats" />
 
     <div class="export-buttons">
       <button @click="exportCSV">Export CSV</button>
       <button @click="exportExcel">Export Excel</button>
       <button @click="exportPDF">Export PDF</button>
-      
-      
+
+
       <!-- Remove FROM PROD!!!!!-->
       <button @click="generateTestData">
         Generate Dummy Data
@@ -70,7 +70,7 @@ function generateTestData() {
 
 
 
-      
+
     </div>
   </div>
 

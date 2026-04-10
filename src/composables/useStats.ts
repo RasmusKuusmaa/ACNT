@@ -77,6 +77,7 @@ export function useStats(
             totalTaxable += Math.max(0, gross - MONTHLY_CAP)
         }
 
+
         return {
             monthKm,
             monthSum: monthTaxFree,
@@ -91,6 +92,30 @@ export function useStats(
             totalTaxable
         }
     })
+    const monthlyBreakdown = computed(() => {
+        const map = new Map<number, { km: number; sum: number; count: number }>()
 
-    return { stats }
+        for (const r of rides.value) {
+            const d = new Date(r.date)
+
+            if (d.getFullYear() !== selectedYear.value) continue
+
+            const m = d.getMonth()
+
+            if (!map.has(m)) {
+                map.set(m, { km: 0, sum: 0, count: 0 })
+            }
+
+            const entry = map.get(m)!
+
+            entry.km += r.km
+            entry.count += 1
+
+            const gross = entry.km * Math.min(kmPrice.value, MAX_KM_RATE)
+            entry.sum = Math.min(gross, MONTHLY_CAP)
+        }
+
+        return map
+    })
+    return { stats, monthlyBreakdown }
 }

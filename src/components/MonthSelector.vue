@@ -3,10 +3,17 @@ import { computed } from 'vue'
 import MonthTable from './MonthTable.vue'
 import type { Ride } from '../types/Ride'
 
+type MonthlyStats = {
+  km: number
+  sum: number
+  count: number
+}
+
 const props = defineProps<{
   rides: Ride[]
   selectedMonth: number
   selectedYear: number
+  monthlyBreakdown: Map<number, MonthlyStats>
 }>()
 
 const emit = defineEmits<{
@@ -18,8 +25,45 @@ function selectMonth(i: number) {
   emit('update:selectedMonth', i)
 }
 
+const availableYears = computed(() => {
+  const currentYear = new Date().getFullYear()
+
+  const years = props.rides
+    .map(r => new Date(r.date).getFullYear())
+    .filter(y => !isNaN(y))
+
+  const minYear = years.length ? Math.min(...years) : currentYear
+
+  const result: number[] = []
+  for (let y = currentYear; y >= minYear; y--) {
+    result.push(y)
+  }
+
+  return result
+})
+
+
+const monthStats = computed(() => {
+  return Array.from({ length: 12 }, (_, i) => {
+    return props.monthlyBreakdown.get(i) ?? {
+      km: 0,
+      sum: 0,
+      count: 0
+    }
+  })
+})
+
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+function getColor(sum: number) {
+  if (sum >= 550) return 'danger'
+  if (sum >= 450) return 'warning'
+  return 'ok'
+}
+
+
 const filteredRides = computed(() => {
-  return props.rides.filter((r) => {
+  return props.rides.filter(r => {
     if (!r.date) return false
     const d = new Date(r.date)
 
@@ -33,22 +77,33 @@ const filteredRides = computed(() => {
 
 <template>
   <div class="wrapper">
+
     <select :value="selectedYear"
       @change="emit('update:selectedYear', Number(($event.target as HTMLSelectElement).value))">
-      <option :value="2026">2026</option>
-      <option :value="2025">2025</option>
+      <option v-for="y in availableYears" :key="y" :value="y">
+        {{ y }}
+      </option>
     </select>
 
     <div class="months">
-      <button v-for="(_, i) in 12" :key="i" @click="selectMonth(i)" :class="{ active: selectedMonth === i }">
-        {{ ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i] }}
+      <button v-for="(m, i) in months" :key="i" @click="selectMonth(i)" class="month-btn" :class="[
+        getColor(monthStats[i].sum),
+        { active: selectedMonth === i }
+      ]">
+        <div class="title">{{ m }}</div>
+
+        <div class="meta">
+          <span>{{ monthStats[i].count }} rides</span>
+          <span>{{ monthStats[i].km }} km</span>
+          <span>{{ monthStats[i].sum.toFixed(0) }} €</span>
+        </div>
       </button>
     </div>
 
+    <!-- TABLE -->
     <MonthTable :rides="filteredRides" />
   </div>
 </template>
-
 
 <style scoped>
 .wrapper {
@@ -59,15 +114,9 @@ const filteredRides = computed(() => {
   margin-bottom: 1rem;
 }
 
-.year {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.4rem;
-}
-
 select {
-  padding: 0.1rem;
+  padding: 0.25rem;
+  margin-bottom: 0.75rem;
 }
 
 .months {
@@ -76,7 +125,40 @@ select {
   gap: 0.5rem;
 }
 
-.months .active {
-  background-color: lightgreen;
+.month-btn {
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  min-width: 100px;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.month-btn:hover {
+  transform: scale(1.02);
+}
+
+.month-btn .meta {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.75rem;
+  opacity: 0.85;
+}
+
+.month-btn.active {
+  outline: 2px solid #222;
+}
+
+.month-btn.ok {
+  background: #f3f3f3;
+}
+
+.month-btn.warning {
+  background: #fff4cc;
+}
+
+.month-btn.danger {
+  background: #ffd6d6;
 }
 </style>
