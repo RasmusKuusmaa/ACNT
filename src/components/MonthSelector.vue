@@ -1,3 +1,8 @@
+<script setup lang="ts">
+import MonthTable from './MonthTable.vue';
+
+</script>
+
 <template>
     <div class="wrapper">
         <div class="year">
@@ -26,7 +31,8 @@
         </div>
 
         <div class="content">
-            <p>Month table later here be yes yes</p>
+            <MonthTable />
+
         </div>
     </div>
 </template>
@@ -51,6 +57,7 @@
 select {
     padding: 0.1rem;
 }
+
 .months {
     display: flex;
     flex-wrap: wrap;
@@ -60,8 +67,4 @@ select {
 .months .active {
     background-color: lightgreen;
 }
-
-
-
 </style>
-

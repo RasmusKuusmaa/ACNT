@@ -2,7 +2,6 @@
 import CompanyForm from './components/CompanyForm.vue';
 import MilageFrom from './components/MilageFrom.vue';
 import MonthSelector from './components/MonthSelector.vue';
-import MonthTable from './components/MonthTable.vue';
 
 </script>
 
@@ -12,7 +11,6 @@ import MonthTable from './components/MonthTable.vue';
     <CompanyForm />
     <MilageFrom />
     <MonthSelector/>
-    <MonthTable/>
   </div>
 </template>
 
