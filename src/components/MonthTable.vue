@@ -33,6 +33,28 @@
             <input type="text" placeholder="sõidu eesmärk" />
             <div>100</div>
         </div>
+
+        <div class="totals">
+            <div class="total-card">
+                <label>Kuu Soidukilomeetrid</label>
+                <label>500</label>
+            </div>
+
+            <div class="total-card">
+                <label>Kuu Summa</label>
+                <label>200</label>
+            </div>
+
+            <div class="total-card">
+                <label>Aasta Soidukilomeetrid</label>
+                <label>2300</label>
+            </div>
+
+            <div class="total-card">
+                <label>Aasta Summa</label>
+                <label>2200</label>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -63,5 +85,24 @@
     font-weight: bold;
     border-bottom: 1px solid #ccc;
     padding-bottom: 0.5rem;
+}
+
+.totals {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.total-card {
+    border: 1px solid #ddd;
+    padding: 1rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    border-radius: 8px;
+    background-color: gray;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 </style>
