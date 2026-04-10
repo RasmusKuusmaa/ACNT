@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import CompanyForm from './components/CompanyForm.vue';
+import DataOverViewtable from './components/DataOverViewtable.vue';
 import MilageFrom from './components/MilageFrom.vue';
 import MonthSelector from './components/MonthSelector.vue';
 
@@ -11,6 +12,7 @@ import MonthSelector from './components/MonthSelector.vue';
     <CompanyForm />
     <MilageFrom />
     <MonthSelector/>
+    <DataOverViewtable/>
   </div>
 </template>
 
