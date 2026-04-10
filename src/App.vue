@@ -13,6 +13,8 @@ import MonthSelector from './components/MonthSelector.vue'
 import { useStats } from './composables/useStats'
 import type { Ride } from './types/Ride'
 import { generateDummyRides } from './composables/useDummyData'
+import { useExport } from './composables/useExport'
+
 
 const rides = ref<Ride[]>([])
 
@@ -29,84 +31,12 @@ function addRide(ride: Ride) {
   })
 }
 
-const getFilteredRides = () => {
-  return rides.value.filter((r: any) => {
-    const date = new Date(r.date)
-    return (
-      date.getMonth() === selectedMonth.value &&
-      date.getFullYear() === selectedYear.value
-    )
-  })
-}
-
-
-function exportCSV() {
-  const header = ['ID', 'Date', 'Description', 'Distance (km)']
-
-  const rows = getFilteredRides().map((r: any) => [
-    r.id,
-    r.date ?? '',
-    r.description ?? '',
-    r.distance ?? 0,
-  ])
-
-  const csv = [header, ...rows]
-    .map(row => row.join(','))
-    .join('\n')
-
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
-  const url = URL.createObjectURL(blob)
-
-  const link = document.createElement('a')
-  link.href = url
-  link.download = `rides_${selectedYear.value}_${selectedMonth.value + 1}.csv`
-  link.click()
-
-  URL.revokeObjectURL(url)
-}
-
-
-
-function exportExcel() {
-  const data = getFilteredRides().map((r: any) => ({
-    ID: r.id,
-    Date: r.date,
-    Description: r.description,
-    Distance_km: r.distance,
-  }))
-
-  const worksheet = XLSX.utils.json_to_sheet(data)
-  const workbook = XLSX.utils.book_new()
-
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Rides')
-
-  XLSX.writeFile(
-    workbook,
-    `rides_${selectedYear.value}_${selectedMonth.value + 1}.xlsx`
-  )
-}
-
-function exportPDF() {
-  const doc = new jsPDF()
-
-  doc.setFontSize(14)
-  doc.text('Sõidupäeviku aruanne', 14, 15)
-
-  const tableData = getFilteredRides().map((r: any) => [
-    r.id,
-    r.date ?? '',
-    r.description ?? '',
-    r.distance ?? 0,
-  ])
-
-  autoTable(doc, {
-    head: [['ID', 'Date', 'Description', 'Distance (km)']],
-    body: tableData,
-    startY: 25,
-  })
-
-  doc.save(`rides_${selectedYear.value}_${selectedMonth.value + 1}.pdf`)
-}
+const { exportCSV, exportExcel, exportPDF } = useExport(
+  rides,
+  selectedMonth,
+  selectedYear,
+  kmPrice
+)
 
 //remove from PROD!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 function generateTestData() {
