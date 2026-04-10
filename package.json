@@ -11,7 +11,10 @@
     "type-check": "vue-tsc --build"
   },
   "dependencies": {
-    "vue": "^3.5.31"
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.7",
+    "vue": "^3.5.31",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@tsconfig/node24": "^24.0.4",
