@@ -6,6 +6,7 @@ export interface Ride {
   endKm: number
   km: number
   purpose: string
+  route: string
 }
 
 export type Stats = {

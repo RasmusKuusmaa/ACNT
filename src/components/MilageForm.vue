@@ -11,7 +11,8 @@ const form = ref({
   car: '',
   startKm: 0,
   endKm: 0,
-  purpose: ''
+  purpose: '',
+  route: ''
 })
 
 const calculatedKm = computed(() => {
@@ -31,7 +32,8 @@ function submit() {
     car: '',
     startKm: 0,
     endKm: 0,
-    purpose: ''
+    purpose: '',
+    route: ''
   }
 }
 </script>
@@ -48,6 +50,7 @@ function submit() {
         <div>Läbisõidumõõdiku lõppnäit</div>
         <div>Kilomeetrid</div>
         <div>Sõidu eesmärk</div>
+        <div>Marsuut</div>
       </div>
 
       <div class="row">
@@ -57,6 +60,7 @@ function submit() {
         <input v-model.number="form.endKm" type="number" />
         <input :value="calculatedKm" disabled />
         <input v-model="form.purpose" />
+        <input v-model="form.route" type="string"/>
       </div>
     </div>
 
@@ -81,7 +85,7 @@ function submit() {
 
 .row {
   display: grid;
-  grid-template-columns: 140px 120px 180px 180px 120px 200px;
+  grid-template-columns: 140px 120px 180px 180px 120px 200px 200px;
   gap: 0.5rem;
   align-items: center;
   padding: 0.3rem 0;

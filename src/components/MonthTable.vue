@@ -37,6 +37,7 @@ const filteredRides = computed<Ride[]>(() => {
             <div>Lõpp</div>
             <div>KM</div>
             <div>Eesmärk</div>
+            <div>Marsuut</div>
         </div>
 
         <div class="row" v-for="(r, i) in rides" :key="r.id">
@@ -47,6 +48,7 @@ const filteredRides = computed<Ride[]>(() => {
             <div>{{ r.endKm }}</div>
             <div>{{ r.km }}</div>
             <div>{{ r.purpose }}</div>
+            <div>{{ r.route }}</div>
         </div>
 
         <div v-if="rides.length === 0">
