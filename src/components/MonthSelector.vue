@@ -1,40 +1,54 @@
 <script setup lang="ts">
-import MonthTable from './MonthTable.vue';
+import { ref, computed } from 'vue'
+import MonthTable from './MonthTable.vue'
+import type { Ride } from '../types/Ride'
 
+const props = defineProps<{
+  rides: Ride[]
+}>()
+
+const selectedMonth = ref<number>(3)
+const selectedYear = ref<number>(2026)
+
+function selectMonth(i: number) {
+  selectedMonth.value = i
+}
+
+const filteredRides = computed<Ride[]>(() => {
+  return props.rides.filter((r) => {
+    if (!r.date) return false
+    const d = new Date(r.date)
+
+    return (
+      d.getMonth() === selectedMonth.value &&
+      d.getFullYear() === selectedYear.value
+    )
+  })
+})
 </script>
 
 <template>
-    <div class="wrapper">
-        <div class="year">
-            <label>Year</label>
-            <select>
-                <option>2026</option>
-                <option>2025</option>
-                <option>2024</option>
+  <div class="wrapper">
 
-            </select>
-        </div>
+    <select v-model="selectedYear">
+      <option :value="2026">2026</option>
+      <option :value="2025">2025</option>
+    </select>
 
-        <div class="months">
-            <button>Jan</button>
-            <button>Feb</button>
-            <button>Mar</button>
-            <button class="active">Apr</button>
-            <button>May</button>
-            <button>Jun</button>
-            <button>Jul</button>
-            <button>Aug</button>
-            <button>Sep</button>
-            <button>Oct</button>
-            <button>Nov</button>
-            <button>Dec</button>
-        </div>
-
-        <div class="content">
-            <MonthTable />
-
-        </div>
+    <div class="months">
+      <button
+        v-for="(_, i) in 12"
+        :key="i"
+        @click="selectMonth(i)"
+        :class="{ active: selectedMonth === i }"
+      >
+        {{ ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][i] }}
+      </button>
     </div>
+
+    <MonthTable :rides="filteredRides" />
+
+  </div>
 </template>
 
 

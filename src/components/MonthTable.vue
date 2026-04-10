@@ -1,60 +1,58 @@
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import MonthTable from './MonthTable.vue'
+import type { Ride } from '../types/Ride'
+
+const props = defineProps<{
+    rides: Ride[]
+}>()
+
+const selectedMonth = ref<number>(3)
+const selectedYear = ref<number>(2026)
+
+function selectMonth(i: number) {
+    selectedMonth.value = i
+}
+
+const filteredRides = computed<Ride[]>(() => {
+    return props.rides.filter((r) => {
+        if (!r.date) return false
+        const d = new Date(r.date)
+
+        return (
+            d.getMonth() === selectedMonth.value &&
+            d.getFullYear() === selectedYear.value
+        )
+    })
+})
+</script>
 <template>
     <div class="table">
+
         <div class="row header">
-            <label>Rida</label>
-            <div>Sõidu kuupäev</div>
-            <div>Auto number</div>
-            <div>Läbisõidumõõdiku algnäit</div>
-            <div>Läbisõidumõõdiku lõppnäit</div>
-            <div>Kilomeetrid</div>
-            <div>Sõidu eesmärk</div>
-            <div>Summa</div>
+            <div>#</div>
+            <div>Kuupäev</div>
+            <div>Auto</div>
+            <div>Alg</div>
+            <div>Lõpp</div>
+            <div>KM</div>
+            <div>Eesmärk</div>
         </div>
 
-
-        <div class="row">
-            <label>1</label>
-            <input type="date" />
-            <input type="text" placeholder="ABC123" />
-            <input type="number" placeholder="0" />
-            <input type="number" placeholder="0" />
-            <input type="number" placeholder="0" />
-            <input type="text" placeholder="sõidu eesmärk" />
-            <div>100</div>
+        <div class="row" v-for="(r, i) in rides" :key="r.id">
+            <div>{{ i + 1 }}</div>
+            <div>{{ r.date }}</div>
+            <div>{{ r.car }}</div>
+            <div>{{ r.startKm }}</div>
+            <div>{{ r.endKm }}</div>
+            <div>{{ r.km }}</div>
+            <div>{{ r.purpose }}</div>
         </div>
 
-        <div class="row">
-            <label>2</label>
-            <input type="date" />
-            <input type="text" placeholder="ABC123" />
-            <input type="number" placeholder="0" />
-            <input type="number" placeholder="0" />
-            <input type="number" placeholder="0" />
-            <input type="text" placeholder="sõidu eesmärk" />
-            <div>100</div>
+        <div v-if="rides.length === 0">
+            Pole andmeid
         </div>
 
-        <div class="totals">
-            <div class="total-card">
-                <label>Kuu Soidukilomeetrid</label>
-                <label>500</label>
-            </div>
-
-            <div class="total-card">
-                <label>Kuu Summa</label>
-                <label>200</label>
-            </div>
-
-            <div class="total-card">
-                <label>Aasta Soidukilomeetrid</label>
-                <label>2300</label>
-            </div>
-
-            <div class="total-card">
-                <label>Aasta Summa</label>
-                <label>2200</label>
-            </div>
-        </div>
     </div>
 </template>
 
