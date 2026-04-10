@@ -87,20 +87,19 @@ const filteredRides = computed(() => {
 
     <div class="months">
       <button v-for="(m, i) in months" :key="i" @click="selectMonth(i)" class="month-btn" :class="[
-        getColor(monthStats[i].sum),
+        getColor(monthStats[i]?.sum ?? 0),
         { active: selectedMonth === i }
       ]">
         <div class="title">{{ m }}</div>
 
         <div class="meta">
-          <span>{{ monthStats[i].count }} rides</span>
-          <span>{{ monthStats[i].km }} km</span>
-          <span>{{ monthStats[i].sum.toFixed(0) }} €</span>
+          <span>{{ monthStats[i]?.count ?? 0 }} rides</span>
+          <span>{{ monthStats[i]?.km ?? 0 }} km</span>
+          <span>{{ (monthStats[i]?.sum ?? 0).toFixed(0) }} €</span>
         </div>
       </button>
     </div>
 
-    <!-- TABLE -->
     <MonthTable :rides="filteredRides" />
   </div>
 </template>

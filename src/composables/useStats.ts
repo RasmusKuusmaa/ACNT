@@ -6,116 +6,121 @@ const MAX_KM_RATE = 0.5
 const MONTHLY_CAP = 550
 
 function getMonthKey(date: Date) {
-    return `${date.getFullYear()}-${date.getMonth()}`
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
+}
+
+function calcMonth(km: number, rate: number) {
+  const gross = km * rate
+  const taxFree = Math.min(gross, MONTHLY_CAP)
+  const taxable = Math.max(0, gross - MONTHLY_CAP)
+  return { km, gross, taxFree, taxable }
 }
 
 export function useStats(
-    rides: Ref<Ride[]>,
-    selectedMonth: Ref<number>,
-    selectedYear: Ref<number>,
-    kmPrice: Ref<number>
+  rides: Ref<Ride[]>,
+  selectedMonth: Ref<number>,
+  selectedYear: Ref<number>,
+  kmPrice: Ref<number>
 ) {
-    const stats = computed<Stats>(() => {
-        const effectiveRate = Math.min(kmPrice.value, MAX_KM_RATE)
 
-        const monthRides = rides.value.filter(r => {
-            const d = new Date(r.date)
-            return (
-                d.getFullYear() === selectedYear.value &&
-                d.getMonth() === selectedMonth.value
-            )
-        })
+  const rate = computed(() => Math.min(kmPrice.value, MAX_KM_RATE))
 
-        const monthKm = monthRides.reduce((sum, r) => sum + r.km, 0)
-        const monthGross = monthKm * effectiveRate
+  const stats = computed(() => {
 
-        const monthTaxFree = Math.min(monthGross, MONTHLY_CAP)
-        const monthTaxable = Math.max(0, monthGross - MONTHLY_CAP)
-
-        const monthMap = new Map<string, number>()
-
-        for (const r of rides.value) {
-            const d = new Date(r.date)
-            if (d.getFullYear() !== selectedYear.value) continue
-
-            const key = getMonthKey(d)
-            monthMap.set(key, (monthMap.get(key) ?? 0) + r.km)
-        }
-
-        let yearTaxFree = 0
-        let yearTaxable = 0
-        let yearKm = 0
-
-        for (const km of monthMap.values()) {
-            const gross = km * effectiveRate
-
-            const taxFree = Math.min(gross, MONTHLY_CAP)
-            const taxable = Math.max(0, gross - MONTHLY_CAP)
-
-            yearTaxFree += taxFree
-            yearTaxable += taxable
-            yearKm += km
-        }
-
-        const totalKm = rides.value.reduce((sum, r) => sum + r.km, 0)
-
-        let totalTaxFree = 0
-        let totalTaxable = 0
-
-        const allMonths = new Map<string, number>()
-
-        for (const r of rides.value) {
-            const d = new Date(r.date)
-            const key = getMonthKey(d)
-            allMonths.set(key, (allMonths.get(key) ?? 0) + r.km)
-        }
-
-        for (const km of allMonths.values()) {
-            const gross = km * effectiveRate
-
-            totalTaxFree += Math.min(gross, MONTHLY_CAP)
-            totalTaxable += Math.max(0, gross - MONTHLY_CAP)
-        }
-
-
-        return {
-            monthKm,
-            monthSum: monthTaxFree,
-            monthTaxable,
-
-            yearKm,
-            yearSum: yearTaxFree,
-            yearTaxable,
-
-            totalKm,
-            totalSum: totalTaxFree,
-            totalTaxable
-        }
+    const monthRides = rides.value.filter(r => {
+      const d = new Date(r.date)
+      return (
+        d.getFullYear() === selectedYear.value &&
+        d.getMonth() === selectedMonth.value
+      )
     })
-    const monthlyBreakdown = computed(() => {
-        const map = new Map<number, { km: number; sum: number; count: number }>()
 
-        for (const r of rides.value) {
-            const d = new Date(r.date)
+    const monthKm = monthRides.reduce((s, r) => s + r.km, 0)
+    const month = calcMonth(monthKm, rate.value)
 
-            if (d.getFullYear() !== selectedYear.value) continue
+    const monthMap = new Map<string, number>()
 
-            const m = d.getMonth()
+    for (const r of rides.value) {
+      const d = new Date(r.date)
+      if (d.getFullYear() !== selectedYear.value) continue
 
-            if (!map.has(m)) {
-                map.set(m, { km: 0, sum: 0, count: 0 })
-            }
+      const key = getMonthKey(d)
+      monthMap.set(key, (monthMap.get(key) ?? 0) + r.km)
+    }
 
-            const entry = map.get(m)!
+    let yearKm = 0
+    let yearTaxFree = 0
+    let yearTaxable = 0
 
-            entry.km += r.km
-            entry.count += 1
+    for (const km of monthMap.values()) {
+      const res = calcMonth(km, rate.value)
+      yearKm += km
+      yearTaxFree += res.taxFree
+      yearTaxable += res.taxable
+    }
 
-            const gross = entry.km * Math.min(kmPrice.value, MAX_KM_RATE)
-            entry.sum = Math.min(gross, MONTHLY_CAP)
-        }
+    const allMonths = new Map<string, number>()
 
-        return map
-    })
-    return { stats, monthlyBreakdown }
+    for (const r of rides.value) {
+      const d = new Date(r.date)
+      const key = getMonthKey(d)
+      allMonths.set(key, (allMonths.get(key) ?? 0) + r.km)
+    }
+
+    let totalKm = 0
+    let totalTaxFree = 0
+    let totalTaxable = 0
+
+    for (const km of allMonths.values()) {
+      const res = calcMonth(km, rate.value)
+      totalKm += km
+      totalTaxFree += res.taxFree
+      totalTaxable += res.taxable
+    }
+
+    return {
+      monthKm,
+      monthSum: month.taxFree,
+      monthTaxable: month.taxable,
+
+      yearKm,
+      yearSum: yearTaxFree,
+      yearTaxable,
+
+      totalKm,
+      totalSum: totalTaxFree,
+      totalTaxable
+    }
+  })
+
+  const monthlyBreakdown = computed(() => {
+
+    const map = new Map<number, { km: number; sum: number; count: number }>()
+
+    for (const r of rides.value) {
+      const d = new Date(r.date)
+
+      if (d.getFullYear() !== selectedYear.value) continue
+
+      const m = d.getMonth()
+
+      if (!map.has(m)) {
+        map.set(m, { km: 0, sum: 0, count: 0 })
+      }
+
+      const entry = map.get(m)!
+      entry.km += r.km
+      entry.count += 1
+
+      const gross = entry.km * rate.value
+      entry.sum = Math.min(gross, MONTHLY_CAP)
+    }
+
+    return map
+  })
+
+  return {
+    stats,
+    monthlyBreakdown
+  }
 }

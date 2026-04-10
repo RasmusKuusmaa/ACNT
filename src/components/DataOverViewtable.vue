@@ -12,41 +12,51 @@ const props = defineProps<{
 <template>
     <div class="container">
 
-
         <div class="card">
-            <label>Kuu Soidukilomeetrid</label>
+            <label>Kuu Kilomeetrid</label>
             <label>{{ stats.monthKm }}</label>
         </div>
 
         <div class="card">
-            <label>Kuu Summa</label>
+            <label>Kuu Maksuvaba summa</label>
             <label>{{ stats.monthSum }}</label>
         </div>
 
         <div class="card">
-            <label>Aasta Soidukilomeetrid</label>
+            <label>Kuu Maksustatav osa (erisoodustus)</label>
+            <label>{{ stats.monthTaxable }}</label>
+        </div>
+
+        <div class="card">
+            <label>Aasta Kilomeetrid</label>
             <label>{{ stats.yearKm }}</label>
         </div>
 
         <div class="card">
-            <label>Aasta Summa</label>
+            <label>Aasta Maksuvaba summa</label>
             <label>{{ stats.yearSum }}</label>
         </div>
-        <div class="card">
-            <label>
-                Kilomeetreid kokku selles paevikus
 
-            </label>
+        <div class="card">
+            <label>Aasta Maksustatav osa</label>
+            <label>{{ stats.yearTaxable }}</label>
+        </div>
+
+        <div class="card">
+            <label>Kokku Kilomeetrid</label>
             <label>{{ stats.totalKm }}</label>
         </div>
 
         <div class="card">
-            <label>
-                Summa kokku selles paevikus
-
-            </label>
+            <label>Kokku Maksuvaba summa</label>
             <label>{{ stats.totalSum }}</label>
         </div>
+
+        <div class="card">
+            <label>Kokku Maksustatav osa</label>
+            <label>{{ stats.totalTaxable }}</label>
+        </div>
+
     </div>
 
 </template>

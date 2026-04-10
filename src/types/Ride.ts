@@ -9,11 +9,14 @@ export interface Ride {
   route: string
 }
 
-export type Stats = {
+export interface Stats {
   monthKm: number
   monthSum: number
+  monthTaxable: number   
   yearKm: number
   yearSum: number
+  yearTaxable: number   
   totalKm: number
   totalSum: number
+  totalTaxable: number   
 }
