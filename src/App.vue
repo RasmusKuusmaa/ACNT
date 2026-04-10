@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import CompanyForm from './components/CompanyForm.vue';
 import MilageFrom from './components/MilageFrom.vue';
+import MonthSelector from './components/MonthSelector.vue';
 
 </script>
 
@@ -9,6 +10,7 @@ import MilageFrom from './components/MilageFrom.vue';
     <h1>Soidupaeviku rakendus</h1>
     <CompanyForm />
     <MilageFrom />
+    <MonthSelector/>
   </div>
 </template>
 
