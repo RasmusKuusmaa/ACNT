@@ -12,6 +12,7 @@ import MonthSelector from './components/MonthSelector.vue'
 
 import { useStats } from './composables/useStats'
 import type { Ride } from './types/Ride'
+import { generateDummyRides } from './composables/useDummyData'
 
 const rides = ref<Ride[]>([])
 
@@ -106,6 +107,12 @@ function exportPDF() {
 
   doc.save(`rides_${selectedYear.value}_${selectedMonth.value + 1}.pdf`)
 }
+
+//remove from PROD!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+function generateTestData() {
+  const dummy = generateDummyRides(200)
+  rides.value.push(...dummy)
+}
 </script>
 
 <template>
@@ -116,11 +123,7 @@ function exportPDF() {
 
     <MilageFrom @add-ride="addRide" />
 
-    <MonthSelector
-      :rides="rides"
-      v-model:selectedMonth="selectedMonth"
-      v-model:selectedYear="selectedYear"
-    />
+    <MonthSelector :rides="rides" v-model:selectedMonth="selectedMonth" v-model:selectedYear="selectedYear" />
 
     <DataOverViewtable :stats="stats" />
 
@@ -128,8 +131,20 @@ function exportPDF() {
       <button @click="exportCSV">Export CSV</button>
       <button @click="exportExcel">Export Excel</button>
       <button @click="exportPDF">Export PDF</button>
+      
+      
+      <!-- Remove FROM PROD!!!!!-->
+      <button @click="generateTestData">
+        Generate Dummy Data
+      </button>
+
+
+
+      
     </div>
   </div>
+
+
 </template>
 
 <style scoped>
