@@ -1,27 +1,31 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import MonthTable from './MonthTable.vue'
 import type { Ride } from '../types/Ride'
 
 const props = defineProps<{
   rides: Ride[]
+  selectedMonth: number
+  selectedYear: number
 }>()
 
-const selectedMonth = ref<number>(3)
-const selectedYear = ref<number>(2026)
+const emit = defineEmits<{
+  (e: 'update:selectedMonth', value: number): void
+  (e: 'update:selectedYear', value: number): void
+}>()
 
 function selectMonth(i: number) {
-  selectedMonth.value = i
+  emit('update:selectedMonth', i)
 }
 
-const filteredRides = computed<Ride[]>(() => {
+const filteredRides = computed(() => {
   return props.rides.filter((r) => {
     if (!r.date) return false
     const d = new Date(r.date)
 
     return (
-      d.getMonth() === selectedMonth.value &&
-      d.getFullYear() === selectedYear.value
+      d.getMonth() === props.selectedMonth &&
+      d.getFullYear() === props.selectedYear
     )
   })
 })
@@ -29,56 +33,50 @@ const filteredRides = computed<Ride[]>(() => {
 
 <template>
   <div class="wrapper">
-
-    <select v-model="selectedYear">
+    <select :value="selectedYear"
+      @change="emit('update:selectedYear', Number(($event.target as HTMLSelectElement).value))">
       <option :value="2026">2026</option>
       <option :value="2025">2025</option>
     </select>
 
     <div class="months">
-      <button
-        v-for="(_, i) in 12"
-        :key="i"
-        @click="selectMonth(i)"
-        :class="{ active: selectedMonth === i }"
-      >
-        {{ ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][i] }}
+      <button v-for="(_, i) in 12" :key="i" @click="selectMonth(i)" :class="{ active: selectedMonth === i }">
+        {{ ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i] }}
       </button>
     </div>
 
     <MonthTable :rides="filteredRides" />
-
   </div>
 </template>
 
 
 <style scoped>
 .wrapper {
-    border: 1px solid #ddd;
-    padding: 1rem;
-    width: 100%;
-    border-radius: 8px;
-    margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  padding: 1rem;
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 1rem;
 }
 
 .year {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
 }
 
 select {
-    padding: 0.1rem;
+  padding: 0.1rem;
 }
 
 .months {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .months .active {
-    background-color: lightgreen;
+  background-color: lightgreen;
 }
 </style>

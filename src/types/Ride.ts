@@ -2,8 +2,17 @@ export interface Ride {
   id: number
   date: string
   car: string
-  startKm: number | string
-  endKm: number | string
-  km: number | string
+  startKm: number
+  endKm: number
+  km: number
   purpose: string
+}
+
+export type Stats = {
+  monthKm: number
+  monthSum: number
+  yearKm: number
+  yearSum: number
+  totalKm: number
+  totalSum: number
 }

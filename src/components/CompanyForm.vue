@@ -1,3 +1,13 @@
+<script setup lang="ts">
+const props = defineProps<{
+    kmPrice: number
+}>()
+
+const emit = defineEmits<{
+    (e: 'update:kmPrice', value: number): void
+}>()
+</script>
+
 <template>
     <div class="card">
         <h2>Ettevotte ja tootaja andmed</h2>
@@ -5,24 +15,25 @@
         <div class="row">
             <div class="column">
                 <label>Ettevote nimi</label>
-                <input type="text" placeholder="Ettevote nimi..."/>
+                <input type="text" placeholder="Ettevote nimi..." />
             </div>
 
-              <div class="column">
+            <div class="column">
                 <label>Ettevote Registrikood</label>
-                <input type="text" placeholder="Ettevote reg..."/>
+                <input type="text" placeholder="Ettevote reg..." />
             </div>
         </div>
 
-       <div class="row">
+        <div class="row">
             <div class="column">
                 <label>tootaja nimi</label>
-                <input type="text" placeholder="Ettevote nimi..."/>
+                <input type="text" placeholder="Ettevote nimi..." />
             </div>
 
-              <div class="column">
+            <div class="column">
                 <label>Kilomeetri Hind($)</label>
-                <input type="text" placeholder="Ettevote reg..."/>
+                <input type="number" :value="kmPrice"
+                    @input="emit('update:kmPrice', Number(($event.target as HTMLInputElement).value))" />
             </div>
         </div>
     </div>

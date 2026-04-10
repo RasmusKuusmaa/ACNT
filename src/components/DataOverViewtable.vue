@@ -1,11 +1,43 @@
+<script setup lang="ts">
+import type { Stats } from '../types/Ride'
+
+const props = defineProps<{
+    stats: Stats
+}>();
+
+
+
+</script>
+
 <template>
     <div class="container">
+
+
+        <div class="card">
+            <label>Kuu Soidukilomeetrid</label>
+            <label>{{ stats.monthKm }}</label>
+        </div>
+
+        <div class="card">
+            <label>Kuu Summa</label>
+            <label>{{ stats.monthSum }}</label>
+        </div>
+
+        <div class="card">
+            <label>Aasta Soidukilomeetrid</label>
+            <label>{{ stats.yearKm }}</label>
+        </div>
+
+        <div class="card">
+            <label>Aasta Summa</label>
+            <label>{{ stats.yearSum }}</label>
+        </div>
         <div class="card">
             <label>
                 Kilomeetreid kokku selles paevikus
 
             </label>
-            <label>300</label>
+            <label>{{ stats.totalKm }}</label>
         </div>
 
         <div class="card">
@@ -13,7 +45,7 @@
                 Summa kokku selles paevikus
 
             </label>
-            <label>700</label>
+            <label>{{ stats.totalSum }}</label>
         </div>
     </div>
 
@@ -36,5 +68,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 </style>

@@ -1,12 +1,21 @@
 <script setup lang="ts">
-import CompanyForm from './components/CompanyForm.vue';
-import DataOverViewtable from './components/DataOverViewtable.vue';
-import MilageFrom from './components/MilageForm.vue';
-import MonthSelector from './components/MonthSelector.vue';
-import { ref } from 'vue';
-import type { Ride } from './types/Ride';
+import { ref } from 'vue'
 
-const rides = ref<Ride[]>([]);
+import CompanyForm from './components/CompanyForm.vue'
+import DataOverViewtable from './components/DataOverViewtable.vue'
+import MilageFrom from './components/MilageForm.vue'
+import MonthSelector from './components/MonthSelector.vue'
+
+import { useStats } from './composables/useStats'
+import type { Ride } from './types/Ride'
+
+const rides = ref<Ride[]>([])
+
+const selectedMonth = ref(new Date().getMonth())
+const selectedYear = ref(new Date().getFullYear())
+const kmPrice = ref(0)
+
+const { stats } = useStats(rides, selectedMonth, selectedYear, kmPrice)
 
 function addRide(ride: Ride) {
   rides.value.push({
@@ -19,10 +28,14 @@ function addRide(ride: Ride) {
 <template>
   <div class="container">
     <h1>Soidupaeviku rakendus</h1>
-    <CompanyForm />
-    <MilageFrom @add-ride="addRide"/>
-    <MonthSelector :rides="rides"/>
-    <DataOverViewtable/>
+
+    <CompanyForm v-model:kmPrice="kmPrice" />
+
+    <MilageFrom @add-ride="addRide" />
+
+    <MonthSelector :rides="rides" v-model:selectedMonth="selectedMonth" v-model:selectedYear="selectedYear" />
+
+    <DataOverViewtable :stats="stats" />
   </div>
 </template>
 

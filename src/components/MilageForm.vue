@@ -6,20 +6,17 @@ const emit = defineEmits<{
   (e: 'add-ride', ride: Ride): void
 }>()
 
-const form = ref<Omit<Ride, 'id' | 'km'>>({
+const form = ref({
   date: '',
   car: '',
-  startKm: '',
-  endKm: '',
+  startKm: 0,
+  endKm: 0,
   purpose: ''
 })
 
 const calculatedKm = computed(() => {
-  const start = Number(form.value.startKm) || 0
-  const end = Number(form.value.endKm) || 0
-
-  if (end < start) return 0
-  return end - start
+  if (form.value.endKm < form.value.startKm) return 0
+  return form.value.endKm - form.value.startKm
 })
 
 function submit() {
@@ -32,8 +29,8 @@ function submit() {
   form.value = {
     date: '',
     car: '',
-    startKm: '',
-    endKm: '',
+    startKm: 0,
+    endKm: 0,
     purpose: ''
   }
 }
@@ -55,11 +52,11 @@ function submit() {
 
       <div class="row">
         <input v-model="form.date" type="date" />
-        <input v-model="form.car" placeholder="ABC123" />
-        <input v-model="form.startKm" type="number" placeholder="0" />
-        <input v-model="form.endKm" type="number" placeholder="0" />
+        <input v-model="form.car" />
+        <input v-model.number="form.startKm" type="number" />
+        <input v-model.number="form.endKm" type="number" />
         <input :value="calculatedKm" disabled />
-        <input v-model="form.purpose" placeholder="eesmärk" />
+        <input v-model="form.purpose" />
       </div>
     </div>
 
