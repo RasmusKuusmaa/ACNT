@@ -10,6 +10,8 @@ export function useExport(
   selectedYear: Ref<number>,
   kmPrice: Ref<number>
 ) {
+  const TAX_FREE_LIMIT = 550
+
   const getFilteredRides = (): Ride[] => {
     return rides.value.filter((r) => {
       const date = new Date(r.date)
@@ -19,6 +21,7 @@ export function useExport(
       )
     })
   }
+
   type ExcelRow = {
     ID: number | string
     Kuupäev: string | ''
@@ -28,6 +31,7 @@ export function useExport(
     Kilomeetrid: number | ''
     'Hüvitis (€)': number | ''
   }
+
   const fileName = () =>
     `soidud_${selectedYear.value}_${selectedMonth.value + 1}`
 
@@ -39,12 +43,15 @@ export function useExport(
   const getTotalComp = (data: Ride[]) =>
     data.reduce((sum, r) => sum + getCompensation(r.km), 0)
 
-  const isLimitExceeded = (total: number) => total > 550
+  const getTaxable = (totalComp: number) =>
+    totalComp > TAX_FREE_LIMIT ? totalComp - TAX_FREE_LIMIT : 0
 
   function exportCSV() {
     const data = getFilteredRides()
+
     const totalKm = getTotalKm(data)
     const totalComp = getTotalComp(data)
+    const totalTaxable = getTaxable(totalComp)
 
     const header = [
       'ID',
@@ -63,10 +70,28 @@ export function useExport(
       r.route,
       r.purpose,
       r.km,
-      getCompensation(r.km),
+      getCompensation(r.km).toFixed(2),
     ])
 
-    rows.push(['', '', '', '', 'KOKKU', totalKm, totalComp])
+    rows.push([
+      '',
+      '',
+      '',
+      '',
+      'KOKKU',
+      totalKm,
+      totalComp.toFixed(2),
+    ])
+
+    rows.push([
+      '',
+      '',
+      '',
+      '',
+      'Erisoodustuse maksustatav osa',
+      '',
+      totalTaxable.toFixed(2),
+    ])
 
     const csv = [header, ...rows]
       .map(row =>
@@ -89,8 +114,10 @@ export function useExport(
 
   function exportExcel() {
     const data = getFilteredRides()
+
     const totalKm = getTotalKm(data)
     const totalComp = getTotalComp(data)
+    const totalTaxable = getTaxable(totalComp)
 
     const rows: ExcelRow[] = data.map((r) => ({
       ID: r.id,
@@ -112,6 +139,16 @@ export function useExport(
       'Hüvitis (€)': totalComp,
     })
 
+    rows.push({
+      ID: '',
+      Kuupäev: '',
+      Auto: '',
+      Marsruut: '',
+      Eesmärk: 'Erisoodustuse maksustatav osa',
+      Kilomeetrid: '',
+      'Hüvitis (€)': totalTaxable,
+    })
+
     const ws = XLSX.utils.json_to_sheet(rows)
 
     const wb = XLSX.utils.book_new()
@@ -121,9 +158,10 @@ export function useExport(
 
   function exportPDF() {
     const data = getFilteredRides()
+
     const totalKm = getTotalKm(data)
     const totalComp = getTotalComp(data)
-    const limitExceeded = isLimitExceeded(totalComp)
+    const totalTaxable = getTaxable(totalComp)
 
     const doc = new jsPDF()
 
@@ -150,18 +188,26 @@ export function useExport(
       totalComp.toFixed(2),
     ])
 
+    tableData.push([
+      '',
+      '',
+      '',
+      '',
+      'Erisoodustuse maksustatav osa',
+      '',
+      totalTaxable.toFixed(2),
+    ])
+
     autoTable(doc, {
-      head: [
-        [
-          'ID',
-          'Kuupäev',
-          'Auto',
-          'Marsruut',
-          'Eesmärk',
-          'KM',
-          'Hüvitis (€)',
-        ],
-      ],
+      head: [[
+        'ID',
+        'Kuupäev',
+        'Auto',
+        'Marsruut',
+        'Eesmärk',
+        'Kilomeetrid',
+        'Hüvitis (€)',
+      ]],
       body: tableData,
       startY: 25,
     })
