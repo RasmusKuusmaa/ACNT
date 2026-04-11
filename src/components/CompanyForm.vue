@@ -1,11 +1,31 @@
 <script setup lang="ts">
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     kmPrice: number
-}>()
+}>(), {
+    kmPrice: 0.5
+})
 
 const emit = defineEmits<{
     (e: 'update:kmPrice', value: number): void
 }>()
+
+function onInput(e: Event) {
+    const target = e.target as HTMLInputElement
+    const raw = target.value
+
+    if (raw === '') {
+        emit('update:kmPrice', 0)
+        return
+    }
+
+    const value = Number(raw)
+
+    if (Number.isNaN(value)) return
+
+    if (value < 0) return
+
+    emit('update:kmPrice', Math.min(0.5, value))
+}
 </script>
 
 <template>
@@ -22,24 +42,28 @@ const emit = defineEmits<{
                 <label>Ettevote Registrikood</label>
                 <input type="text" placeholder="Ettevote reg..." />
             </div>
-        </div>
 
-        <div class="row">
             <div class="column">
-                <label>tootaja nimi</label>
-                <input type="text" placeholder="Ettevote nimi..." />
+                <label>Töötaja nimi</label>
+                <input type="text" placeholder="Töötaja nimi..." />
             </div>
 
             <div class="column">
                 <label>Kilomeetri Hind($)</label>
-                <input type="number" :value="kmPrice"
-                    @input="emit('update:kmPrice', Number(($event.target as HTMLInputElement).value))" />
+                <input
+                    type="number"
+                    :value="kmPrice"
+                    min="0"
+                    max="0.5"
+                    step="0.01"
+                    @input="onInput"
+                />
             </div>
         </div>
     </div>
 </template>
 
-<style scoped>
+<style>
 .card {
     border: 1px solid #ddd;
     padding: 1rem;
@@ -50,12 +74,16 @@ const emit = defineEmits<{
 .row {
     display: flex;
     flex-direction: row;
-    margin: 1rem;
+    justify-content: space-around;
 }
 
 .column {
     display: flex;
     flex-direction: column;
-    margin: 0.5rem;
+}
+
+input {
+    border-radius: 8px;
+    padding: 0.3rem;
 }
 </style>

@@ -20,7 +20,7 @@ const rides = ref<Ride[]>([])
 
 const selectedMonth = ref(new Date().getMonth())
 const selectedYear = ref(new Date().getFullYear())
-const kmPrice = ref(0)
+const kmPrice = ref(0.5)
 
 const { stats, monthlyBreakdown } = useStats(rides, selectedMonth, selectedYear, kmPrice)
 
@@ -80,7 +80,7 @@ function generateTestData() {
 <style scoped>
 .container {
   margin: auto;
-  padding: 1.5rem;
+  
 }
 
 h1 {
