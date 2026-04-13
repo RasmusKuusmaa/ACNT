@@ -1,14 +1,40 @@
+import type { Ride } from '@/types/Ride'
 import { supabase } from './supabase'
 
-export async function apiGetMe() {
-  const session = await supabase.auth.getSession()
-  const token = session.data.session?.access_token
+const API_URL = import.meta.env.VITE_API_URL
 
-  const res = await fetch(import.meta.env.VITE_API_URL + '/users/me', {
+async function getToken() {
+  const { data } = await supabase.auth.getSession()
+  return data.session?.access_token
+}
+
+export async function getRides(): Promise<Ride[]> {
+  const token = await getToken()
+
+  const res = await fetch(`${API_URL}/rides`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
   })
 
-  return res.json()
+  if (!res.ok) throw new Error('Failed to fetch rides')
+
+  return await res.json()
+}
+
+export async function addRide(ride: Ride): Promise<Ride> {
+  const token = await getToken()
+
+  const res = await fetch(`${API_URL}/rides`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(ride)
+  })
+
+  if (!res.ok) throw new Error('Failed to add ride')
+
+  return await res.json()
 }

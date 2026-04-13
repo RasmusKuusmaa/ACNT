@@ -1,14 +1,17 @@
 export interface Ride {
-  id: number
+  id?: string
+  user_id?: string
+
   date: string
   car: string
-  startKm: number
-  endKm: number
+
+  start_km: number
+  end_km: number
+
   km: number
   purpose: string
   route: string
 }
-
 export interface Stats {
   monthKm: number
   monthSum: number

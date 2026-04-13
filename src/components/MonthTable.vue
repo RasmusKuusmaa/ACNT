@@ -44,8 +44,8 @@ const filteredRides = computed<Ride[]>(() => {
             <div>{{ i + 1 }}</div>
             <div>{{ r.date }}</div>
             <div>{{ r.car }}</div>
-            <div>{{ r.startKm }}</div>
-            <div>{{ r.endKm }}</div>
+            <div>{{ r.start_km }}</div>
+            <div>{{ r.end_km }}</div>
             <div>{{ r.km }}</div>
             <div>{{ r.purpose }}</div>
             <div>{{ r.route }}</div>

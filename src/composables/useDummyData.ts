@@ -65,17 +65,17 @@ export function generateDummyRides(count: number): Ride[] {
   for (let i = 0; i < count; i++) {
     const distance = randomBetween(5, 120)
 
-    const startKm = currentKm
-    const endKm = startKm + distance
+    const start_km = currentKm
+    const end_km = start_km + distance
 
-    currentKm = endKm
+    currentKm = end_km
 
     rides.push({
       id: Date.now() + i,
       date: randomDate(),
       car: randomItem(cars),
-      startKm,
-      endKm,
+      start_km,
+      end_km,
       km: distance,
       purpose: randomItem(purposes),
       route: generateRoute(),

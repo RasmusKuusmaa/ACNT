@@ -9,29 +9,28 @@ const emit = defineEmits<{
 const form = ref({
   date: '',
   car: '',
-  startKm: 0,
-  endKm: 0,
+  start_km: 0,
+  end_km: 0,
   purpose: '',
   route: ''
 })
 
 const calculatedKm = computed(() => {
-  if (form.value.endKm < form.value.startKm) return 0
-  return form.value.endKm - form.value.startKm
+  if (form.value.end_km < form.value.start_km) return 0
+  return form.value.end_km - form.value.start_km
 })
 
 function submit() {
   emit('add-ride', {
     ...form.value,
     km: calculatedKm.value,
-    id: Date.now()
   })
 
   form.value = {
     date: '',
     car: '',
-    startKm: 0,
-    endKm: 0,
+    start_km: 0,
+    end_km: 0,
     purpose: '',
     route: ''
   }
@@ -56,8 +55,8 @@ function submit() {
       <div class="row">
         <input v-model="form.date" type="date" />
         <input v-model="form.car" />
-        <input v-model.number="form.startKm" type="number" />
-        <input v-model.number="form.endKm" type="number" />
+        <input v-model.number="form.start_km" type="number" />
+        <input v-model.number="form.end_km" type="number" />
         <input :value="calculatedKm" disabled />
         <input v-model="form.purpose" />
         <input v-model="form.route" type="string"/>
