@@ -5,21 +5,40 @@ import { useRouter } from 'vue-router'
 
 const email = ref('')
 const password = ref('')
+const role = ref<'employee' | 'accountant'>('employee')
+const loading = ref(false)
+
 const router = useRouter()
 
 const register = async () => {
-    const { error } = await supabase.auth.signUp({
-        email: email.value,
-        password: password.value
-    })
+    if (loading.value) return
 
-    if (error) {
-        alert(error.message)
-        return
+    loading.value = true
+
+    try {
+        const { data, error } = await supabase.auth.signUp({
+            email: email.value,
+            password: password.value
+        })
+
+        if (error) throw error
+
+        const user = data.user
+        if (!user) return
+
+        await supabase.from('profiles').upsert({
+            id: user.id,
+            role: role.value
+        })
+
+        alert('Registered successfully')
+        router.push('/login')
+
+    } catch (err: any) {
+        alert(err.message)
+    } finally {
+        loading.value = false
     }
-
-    alert('Check your email for confirmation')
-    router.push('/login')
 }
 </script>
 
@@ -30,8 +49,17 @@ const register = async () => {
         <input v-model="email" placeholder="Email" />
         <input v-model="password" type="password" placeholder="Password" />
 
-        <button @click="register">Register</button>
+        <select v-model="role">
+            <option value="employee">Employee</option>
+            <option value="accountant">Accountant</option>
+        </select>
+
+        <button @click="register" :disabled="loading">
+            {{ loading ? 'Creating...' : 'Create account' }}
+        </button>
+
         <button>
+
             <router-link to="/login">To Login</router-link>
         </button>
     </div>
