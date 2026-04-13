@@ -12,7 +12,7 @@ import { generateDummyRides } from '../composables/useDummyData'
 import { useExport } from '../composables/useExport'
 import { useRouter } from 'vue-router'
 import { supabase } from '@/services/supabase'
-import { getRides, addRide as addRideApi } from '@/services/api'
+import { getRides, addRide as addRideApi, addRidesBulk } from '@/services/api'
 
 const router = useRouter()
 
@@ -44,9 +44,14 @@ const { exportCSV, exportExcel, exportPDF } = useExport(
 )
 
 //remove from PROD!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-function generateTestData() {
-    const dummy = generateDummyRides(200)
-    rides.value.push(...dummy)
+async function generateTestData() {
+  console.log("BUTTON CLICKED 🚀")
+
+  const dummy = generateDummyRides(200)
+
+  await addRidesBulk(dummy)
+
+  rides.value = await getRides()
 }
 
 onMounted(async () => {

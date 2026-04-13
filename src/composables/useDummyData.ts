@@ -71,7 +71,6 @@ export function generateDummyRides(count: number): Ride[] {
     currentKm = end_km
 
     rides.push({
-      id: Date.now() + i,
       date: randomDate(),
       car: randomItem(cars),
       start_km,
