@@ -120,7 +120,7 @@ export function useExport(
     const totalTaxable = getTaxable(totalComp)
 
     const rows: ExcelRow[] = data.map((r) => ({
-      ID: r.id,
+      ID: r.id ?? '',
       Kuupäev: r.date,
       Auto: r.car,
       Marsruut: r.route,
@@ -168,13 +168,18 @@ export function useExport(
     doc.setFontSize(14)
     doc.text('Sõidupäeviku aruanne', 14, 15)
 
+    const safe = (v: string | number | undefined): string | number => {
+      if (v === undefined || v === null) return ''
+      return v
+    }
+
     const tableData = data.map((r) => [
-      r.id,
-      r.date,
-      r.car,
-      r.route,
-      r.purpose,
-      r.km,
+      safe(r.id),
+      safe(r.date),
+      safe(r.car),
+      safe(r.route),
+      safe(r.purpose),
+      safe(r.km),
       getCompensation(r.km).toFixed(2),
     ])
 
