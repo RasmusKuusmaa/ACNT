@@ -9,23 +9,30 @@ const auth = useAuthStore()
 const router = useRouter()
 
 const login = async () => {
-  try {
-    await auth.login(email.value, password.value)
-    router.push('/')
-  } catch (err) {
-    console.error(err)
-    alert('Login failed')
-  }
+    try {
+        await auth.login(email.value, password.value)
+        router.push('/')
+    } catch (err) {
+        console.error(err)
+        alert('Login failed')
+    }
 }
+
+
 </script>
 
 <template>
-  <div>
-    <h1>Login</h1>
+    <div>
+        <h1>Login</h1>
 
-    <input v-model="email" placeholder="Email" />
-    <input v-model="password" type="password" placeholder="Password" />
+        <input v-model="email" placeholder="Email" />
+        <input v-model="password" type="password" placeholder="Password" />
 
-    <button @click="login">Login</button>
-  </div>
+        <button @click="login">Login</button>
+        <button>
+
+            <router-link to="/register">To Register</router-link>
+        </button>
+
+    </div>
 </template>

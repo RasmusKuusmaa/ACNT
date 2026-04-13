@@ -8,28 +8,31 @@ const password = ref('')
 const router = useRouter()
 
 const register = async () => {
-  const { error } = await supabase.auth.signUp({
-    email: email.value,
-    password: password.value
-  })
+    const { error } = await supabase.auth.signUp({
+        email: email.value,
+        password: password.value
+    })
 
-  if (error) {
-    alert(error.message)
-    return
-  }
+    if (error) {
+        alert(error.message)
+        return
+    }
 
-  alert('Check your email for confirmation')
-  router.push('/login')
+    alert('Check your email for confirmation')
+    router.push('/login')
 }
 </script>
 
 <template>
-  <div>
-    <h1>Register</h1>
+    <div>
+        <h1>Register</h1>
 
-    <input v-model="email" placeholder="Email" />
-    <input v-model="password" type="password" placeholder="Password" />
+        <input v-model="email" placeholder="Email" />
+        <input v-model="password" type="password" placeholder="Password" />
 
-    <button @click="register">Register</button>
-  </div>
+        <button @click="register">Register</button>
+        <button>
+            <router-link to="/login">To Login</router-link>
+        </button>
+    </div>
 </template>
