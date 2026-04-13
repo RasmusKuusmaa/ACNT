@@ -10,7 +10,15 @@ import { useStats } from '../composables/useStats'
 import type { Ride } from '../types/Ride'
 import { generateDummyRides } from '../composables/useDummyData'
 import { useExport } from '../composables/useExport'
+import { useRouter } from 'vue-router'
+import { supabase } from '@/services/supabase'
 
+const router = useRouter()
+
+const logout = async () => {
+    await supabase.auth.signOut()
+    router.push('/login')
+}
 
 const rides = ref<Ride[]>([])
 
@@ -39,6 +47,9 @@ function generateTestData() {
   const dummy = generateDummyRides(200)
   rides.value.push(...dummy)
 }
+
+
+
 </script>
 
 <template>
@@ -65,7 +76,9 @@ function generateTestData() {
       </button>
 
 
-
+      <button @click="logout">
+        Logout
+      </button>
 
     </div>
   </div>
