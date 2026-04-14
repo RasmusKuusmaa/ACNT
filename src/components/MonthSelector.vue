@@ -42,7 +42,6 @@ const availableYears = computed(() => {
   return result
 })
 
-
 const monthStats = computed(() => {
   return Array.from({ length: 12 }, (_, i) => {
     return props.monthlyBreakdown.get(i) ?? {
@@ -61,7 +60,6 @@ function getColor(sum: number) {
   return 'ok'
 }
 
-
 const filteredRides = computed(() => {
   return props.rides.filter(r => {
     if (!r.date) return false
@@ -77,19 +75,26 @@ const filteredRides = computed(() => {
 
 <template>
   <div class="wrapper">
-
-    <select :value="selectedYear"
-      @change="emit('update:selectedYear', Number(($event.target as HTMLSelectElement).value))">
+    <select
+      :value="selectedYear"
+      @change="emit('update:selectedYear', Number(($event.target as HTMLSelectElement).value))"
+    >
       <option v-for="y in availableYears" :key="y" :value="y">
         {{ y }}
       </option>
     </select>
 
     <div class="months">
-      <button v-for="(m, i) in months" :key="i" @click="selectMonth(i)" class="month-btn" :class="[
-        getColor(monthStats[i]?.sum ?? 0),
-        { active: selectedMonth === i }
-      ]">
+      <button
+        v-for="(m, i) in months"
+        :key="i"
+        @click="selectMonth(i)"
+        class="month-btn"
+        :class="[
+          getColor(monthStats[i]?.sum ?? 0),
+          { active: selectedMonth === i }
+        ]"
+      >
         <div class="title">{{ m }}</div>
 
         <div class="meta">
@@ -107,31 +112,33 @@ const filteredRides = computed(() => {
 <style scoped>
 .wrapper {
   border: 1px solid #ddd;
-  padding: 1rem;
+  padding: 0.75rem;
   width: 100%;
   border-radius: 8px;
   margin-bottom: 1rem;
 }
 
 select {
-  padding: 0.25rem;
+  padding: 0.4rem;
   margin-bottom: 0.75rem;
+  width: 100%;
 }
 
 .months {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
   gap: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .month-btn {
-  padding: 0.6rem;
+  padding: 0.5rem;
   border-radius: 8px;
   border: 1px solid #ccc;
-  min-width: 100px;
   text-align: left;
   cursor: pointer;
   transition: 0.15s;
+  font-size: 0.8rem;
 }
 
 .month-btn:hover {
@@ -141,7 +148,7 @@ select {
 .month-btn .meta {
   display: flex;
   flex-direction: column;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   opacity: 0.85;
 }
 
@@ -159,5 +166,16 @@ select {
 
 .month-btn.danger {
   background: #ffd6d6;
+}
+
+@media (max-width: 768px) {
+  .month-btn {
+    font-size: 0.7rem;
+    padding: 0.4rem;
+  }
+
+  .month-btn .meta {
+    font-size: 0.65rem;
+  }
 }
 </style>
