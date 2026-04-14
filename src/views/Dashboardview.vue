@@ -45,8 +45,6 @@ const { exportCSV, exportExcel, exportPDF } = useExport(
 
 //remove from PROD!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 async function generateTestData() {
-    console.log("BUTTON CLICKED 🚀")
-
     const dummy = generateDummyRides(200)
 
     await addRidesBulk(dummy)
