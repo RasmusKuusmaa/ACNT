@@ -45,10 +45,10 @@ function submit() {
       <div class="row header">
         <div>Sõidu kuupäev</div>
         <div>Auto number</div>
-        <div>Läbisõidumõõdiku algnäit</div>
-        <div>Läbisõidumõõdiku lõppnäit</div>
-        <div>Kilomeetrid</div>
-        <div>Sõidu eesmärk</div>
+        <div>Alg</div>
+        <div>Lõpp</div>
+        <div>KM</div>
+        <div>Eesmärk</div>
         <div>Marsuut</div>
       </div>
 
@@ -59,7 +59,7 @@ function submit() {
         <input v-model.number="form.end_km" type="number" />
         <input :value="calculatedKm" disabled />
         <input v-model="form.purpose" />
-        <input v-model="form.route" type="string"/>
+        <input v-model="form.route" />
       </div>
     </div>
 
@@ -70,35 +70,52 @@ function submit() {
 <style scoped>
 .card {
   border: 1px solid #ddd;
-  padding: 1rem;
+  padding: 0.75rem;
   border-radius: 8px;
   margin-bottom: 1rem;
   width: 100%;
 }
 
 .table {
-  border: 1px solid #ddd;
-  padding: 0.5rem;
   overflow-x: auto;
 }
 
 .row {
   display: grid;
-  grid-template-columns: 140px 120px 180px 180px 120px 200px 200px;
-  gap: 0.5rem;
-  align-items: center;
-  padding: 0.3rem 0;
+  grid-template-columns: 120px 100px 100px 100px 80px 140px 140px;
+  gap: 0.4rem;
+  padding: 0.4rem 0;
+  font-size: 0.85rem;
 }
 
 .header {
   font-weight: bold;
   border-bottom: 1px solid #ccc;
-  padding-bottom: 0.5rem;
 }
 
 input {
   width: 100%;
-  padding: 4px;
-  box-sizing: border-box;
+  padding: 0.35rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+button {
+  margin-top: 0.75rem;
+  padding: 0.6rem;
+  border: none;
+  border-radius: 6px;
+  background: #2d6cdf;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .header {
+    display: none;
+  }
 }
 </style>

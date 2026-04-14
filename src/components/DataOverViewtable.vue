@@ -67,6 +67,7 @@ const props = defineProps<{
     display: flex;
     align-items: start;
     gap: 3rem;
+    flex-direction: row;
 }
 
 .card {

@@ -45,13 +45,13 @@ const { exportCSV, exportExcel, exportPDF } = useExport(
 
 //remove from PROD!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 async function generateTestData() {
-  console.log("BUTTON CLICKED 🚀")
+    console.log("BUTTON CLICKED 🚀")
 
-  const dummy = generateDummyRides(200)
+    const dummy = generateDummyRides(200)
 
-  await addRidesBulk(dummy)
+    await addRidesBulk(dummy)
 
-  rides.value = await getRides()
+    rides.value = await getRides()
 }
 
 onMounted(async () => {
@@ -62,7 +62,7 @@ onMounted(async () => {
 
 <template>
     <div class="container">
-        <h1>Soidupaeviku rakendus</h1>
+        <h1>Sõidupäevik</h1>
 
         <CompanyForm v-model:kmPrice="kmPrice" />
 
@@ -70,53 +70,46 @@ onMounted(async () => {
 
         <MonthSelector v-model:selectedMonth="selectedMonth" v-model:selectedYear="selectedYear" :rides="rides"
             :monthly-breakdown="monthlyBreakdown" />
+
         <DataOverViewtable :stats="stats" />
 
         <div class="export-buttons">
-            <button @click="exportCSV">Export CSV</button>
-            <button @click="exportExcel">Export Excel</button>
-            <button @click="exportPDF">Export PDF</button>
-
-
-            <!-- Remove FROM PROD!!!!!-->
-            <button @click="generateTestData">
-                Generate Dummy Data
-            </button>
-
-
-            <button @click="logout">
-                Logout
-            </button>
-
+            <button @click="exportCSV">CSV</button>
+            <button @click="exportExcel">Excel</button>
+            <button @click="exportPDF">PDF</button>
+            <button @click="generateTestData">Test</button>
+            <button @click="logout">Logout</button>
         </div>
     </div>
-
-
 </template>
 
 <style scoped>
 .container {
-    margin: auto;
-
+    padding: 0.75rem;
+    justify-content: center;
+    gap: 0.6rem;
 }
-
 h1 {
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+    text-align: center;
 }
 
 .export-buttons {
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     display: flex;
-    gap: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.4rem;
 }
 
 .export-buttons button {
-    padding: 0.6rem 1rem;
+    flex: 1;
+    padding: 0.5rem;
     border: none;
     border-radius: 6px;
-    cursor: pointer;
     background: #2d6cdf;
     color: white;
+    font-size: 0.8rem;
 }
 
 .export-buttons button:hover {

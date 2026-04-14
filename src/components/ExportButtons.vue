@@ -8,9 +8,9 @@ defineProps<{
 
 <template>
   <div class="export-buttons">
-    <button @click="onCSV">Export CSV</button>
-    <button @click="onExcel">Export Excel</button>
-    <button @click="onPDF">Export PDF</button>
+    <button @click="onCSV">CSV</button>
+    <button @click="onExcel">Excel</button>
+    <button @click="onPDF">PDF</button>
   </div>
 </template>
 
@@ -18,14 +18,15 @@ defineProps<{
 .export-buttons {
   margin-top: 1rem;
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
 }
 
 button {
-  padding: 0.6rem 1rem;
+  flex: 1;
+  padding: 0.6rem;
   border: none;
   border-radius: 6px;
-  cursor: pointer;
   background: #2d6cdf;
   color: white;
 }
