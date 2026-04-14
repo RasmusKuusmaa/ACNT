@@ -77,6 +77,9 @@ onMounted(async () => {
             <button @click="exportPDF">PDF</button>
             <button @click="generateTestData">Test</button>
             <button @click="logout">Logout</button>
+            <button>
+                <router-link to="/accountant">accountant</router-link>
+            </button>
         </div>
     </div>
 </template>
